@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapa — Voice-first AI assistant for Android</title>
+  <meta
+    name="description"
+    content="Chapa is a voice-first AI chat app for Android with backend-managed context, encrypted persistence, offline text replies, and a polished conversational interface."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFBFF;
+      --surface: #FFFFFF;
+      --ink-1: #0B1020;
+      --ink-2: #1E2538;
+      --ink-3: #5A6388;
+      --ink-4: #8A92B2;
+      --hairline: #E4E8F4;
+      --hairline-2: #D7DCEC;
+      --blue: #4A8CFF;
+      --blue-soft: #DCE9FF;
+      --blue-tint: #EEF4FF;
+      --amber: #FFB347;
+      --green: #4CC871;
+      --coral: #FF5C5C;
+      --rainbow: linear-gradient(90deg, #FF5C5C 0%, #FF9F43 28%, #4CC871 58%, #4A8CFF 100%);
+      --display: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+      --text: "Geist", "Inter", system-ui, sans-serif;
+      --mono: "Geist Mono", ui-monospace, monospace;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink-1);
+      font-family: var(--text);
+      letter-spacing: 0;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(228, 232, 244, 0.76);
+      background: rgba(250, 251, 255, 0.86);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: var(--rainbow);
+      box-shadow: 0 0 0 4px #fff inset;
+      outline: 1px solid var(--hairline);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--ink-3);
+    }
+
+    .nav-links a:hover { color: var(--ink-1); }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--hairline);
+      background: #fff;
+      color: var(--ink-1);
+    }
+
+    .button.primary {
+      border-color: transparent;
+      background:
+        linear-gradient(#fff, #fff) padding-box,
+        var(--rainbow) border-box;
+    }
+
+    .hero {
+      width: min(var(--max), calc(100% - 40px));
+      min-height: calc(100vh - 72px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 0.78fr);
+      gap: 70px;
+      align-items: center;
+      padding: 74px 0 42px;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 13px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--hairline);
+      background: #fff;
+      color: var(--ink-2);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .pill.blue {
+      background: var(--blue-tint);
+      border-color: #D7E2FA;
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    .hero h1 {
+      margin-top: 24px;
+      max-width: 8.5ch;
+      font-family: var(--display);
+      font-size: clamp(76px, 12vw, 148px);
+      line-height: 0.88;
+      letter-spacing: -0.045em;
+      font-weight: 800;
+    }
+
+    .grad-text {
+      background: var(--rainbow);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      max-width: 35ch;
+      margin-top: 30px;
+      font-size: clamp(20px, 2.5vw, 28px);
+      line-height: 1.42;
+      color: var(--ink-2);
+      letter-spacing: -0.01em;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    .product-stage {
+      position: relative;
+      min-height: 650px;
+      border: 1px solid var(--hairline);
+      border-radius: 34px;
+      overflow: hidden;
+      background:
+        radial-gradient(70% 52% at 65% 12%, #FFFFFF 0%, rgba(255,255,255,0) 62%),
+        linear-gradient(180deg, #F0F4FF 0%, #E6EEFF 100%);
+      display: grid;
+      place-items: center;
+      padding: 44px 24px;
+    }
+
+    .product-stage::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 10px;
+      background: var(--rainbow);
+    }
+
+    .phone {
+      width: min(86%, 360px);
+      border-radius: 40px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.74);
+      background: #fff;
+      filter: drop-shadow(0 38px 74px rgba(11, 16, 32, 0.2)) drop-shadow(0 8px 20px rgba(11, 16, 32, 0.12));
+    }
+
+    .stage-tag {
+      position: absolute;
+      top: 28px;
+      right: 28px;
+      z-index: 2;
+    }
+
+    .section {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 108px 0;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 40px;
+    }
+
+    .section h2 {
+      font-family: var(--display);
+      font-size: clamp(48px, 7vw, 92px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+      max-width: 10ch;
+      font-weight: 750;
+    }
+
+    .section-head p {
+      max-width: 36ch;
+      font-size: 20px;
+      line-height: 1.5;
+      color: var(--ink-3);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--hairline);
+      border-radius: 22px;
+      background: #fff;
+      padding: 24px;
+    }
+
+    .card .n {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--blue);
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      margin-top: 18px;
+      font-family: var(--display);
+      font-size: 28px;
+      line-height: 1.02;
+      letter-spacing: -0.025em;
+      font-weight: 700;
+    }
+
+    .card p {
+      margin-top: 14px;
+      color: var(--ink-3);
+      line-height: 1.55;
+      font-size: 16px;
+    }
+
+    .showcase {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 42px;
+      align-items: center;
+      padding: 52px;
+      border: 1px solid var(--hairline);
+      border-radius: 32px;
+      background: #fff;
+    }
+
+    .showcase-copy h2 {
+      font-family: var(--display);
+      font-size: clamp(46px, 7vw, 84px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .showcase-copy p {
+      margin-top: 22px;
+      color: var(--ink-2);
+      font-size: 22px;
+      line-height: 1.45;
+      max-width: 32ch;
+    }
+
+    .shots {
+      min-height: 520px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      align-items: end;
+    }
+
+    .shot {
+      border: 1px solid var(--hairline);
+      border-radius: 30px;
+      overflow: hidden;
+      background: #fff;
+      filter: drop-shadow(0 26px 40px rgba(11,16,32,0.14));
+    }
+
+    .shot:nth-child(1) { transform: rotate(-3deg) translateY(-8px); }
+    .shot:nth-child(2) { transform: rotate(2deg) translateY(26px); }
+    .shot:nth-child(3) { transform: rotate(-1deg) translateY(2px); }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: 1fr 72px 1fr;
+      gap: 0;
+      align-items: stretch;
+    }
+
+    .stack {
+      border: 1px solid var(--hairline);
+      border-radius: 26px;
+      background: #fff;
+      padding: 28px;
+    }
+
+    .stack.android { background: linear-gradient(180deg, #F7FBFF 0%, #FFFFFF 100%); }
+    .stack.backend { background: linear-gradient(180deg, #FFF8EC 0%, #FFFFFF 100%); }
+
+    .stack h3 {
+      font-family: var(--display);
+      font-size: 34px;
+      letter-spacing: -0.02em;
+    }
+
+    .layer {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.74);
+    }
+
+    .layer b {
+      font-family: var(--display);
+      font-size: 17px;
+    }
+
+    .layer span {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink-3);
+      text-align: right;
+    }
+
+    .bridge {
+      display: grid;
+      place-items: center;
+      color: var(--blue);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      writing-mode: vertical-rl;
+      text-transform: uppercase;
+    }
+
+    .security-band {
+      border: 1px solid var(--hairline);
+      border-radius: 32px;
+      padding: 42px;
+      background:
+        linear-gradient(#fff, #fff) padding-box,
+        var(--rainbow) border-box;
+      border-color: transparent;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .security-band h2 {
+      font-family: var(--display);
+      font-size: clamp(46px, 7vw, 82px);
+      line-height: 0.96;
+      letter-spacing: -0.04em;
+    }
+
+    .security-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .security-list div {
+      padding: 16px 18px;
+      border: 1px solid var(--hairline);
+      border-radius: 15px;
+      background: #fff;
+      color: var(--ink-2);
+      line-height: 1.4;
+    }
+
+    .cta {
+      padding: 96px 0 70px;
+      text-align: center;
+    }
+
+    .cta-inner {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      border-radius: 36px;
+      border: 1px solid var(--hairline);
+      background:
+        radial-gradient(80% 80% at 50% 0%, #FFFFFF 0%, rgba(255,255,255,0) 62%),
+        linear-gradient(180deg, #F0F4FF 0%, #FAFBFF 100%);
+      padding: 72px 28px;
+    }
+
+    .cta h2 {
+      max-width: 10ch;
+      margin: 0 auto;
+      font-family: var(--display);
+      font-size: clamp(58px, 9vw, 112px);
+      line-height: 0.92;
+      letter-spacing: -0.045em;
+      font-weight: 800;
+    }
+
+    .cta p {
+      margin: 24px auto 0;
+      max-width: 38ch;
+      font-size: 22px;
+      line-height: 1.45;
+      color: var(--ink-2);
+    }
+
+    .footer {
+      border-top: 1px solid var(--hairline);
+      padding: 34px 0;
+      color: var(--ink-3);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 56px;
+      }
+      .product-stage { min-height: auto; }
+      .section-head,
+      .showcase,
+      .security-band {
+        grid-template-columns: 1fr;
+        display: grid;
+      }
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+      .architecture {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+      .bridge {
+        writing-mode: horizontal-tb;
+      }
+      .shots {
+        min-height: auto;
+        grid-template-columns: 1fr;
+      }
+      .shot,
+      .shot:nth-child(1),
+      .shot:nth-child(2),
+      .shot:nth-child(3) {
+        transform: none;
+        max-width: 360px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .nav,
+      .hero,
+      .section,
+      .footer-inner,
+      .cta-inner {
+        width: min(100% - 28px, var(--max));
+      }
+      .hero h1 { font-size: 72px; }
+      .lead { font-size: 20px; }
+      .section { padding: 72px 0; }
+      .showcase,
+      .security-band,
+      .cta-inner {
+        padding: 28px;
+        border-radius: 24px;
+      }
+      .product-stage {
+        border-radius: 26px;
+      }
+      .phone {
+        width: min(92%, 320px);
+        border-radius: 32px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="#top" aria-label="Chapa home">
+        <span class="brand-dot" aria-hidden="true"></span>
+        Chapa
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#product">Product</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#security">Security</a>
+      </div>
+      <a class="button primary" href="https://chapa-backend.vercel.app/docs">API docs</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <div class="eyebrow"><span class="pill blue">Android AI</span> voice-first companion</div>
+        <h1 id="hero-title">Talk to <span class="grad-text">Chapa</span></h1>
+        <p class="lead">
+          A polished AI chat product for Android: voice-first, context-aware, encrypted on the backend, and ready for offline text moments.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="https://github.com/mariorsh/chapa">Read project</a>
+          <a class="button" href="https://chapa-backend.vercel.app/docs">Explore API</a>
+        </div>
+        <div class="hero-meta" aria-label="Project highlights">
+          <span class="pill">Kotlin + Compose</span>
+          <span class="pill">FastAPI backend</span>
+          <span class="pill">LiteRT-LM offline</span>
+          <span class="pill">AES-GCM persistence</span>
+        </div>
+      </div>
+
+      <div class="product-stage" aria-label="Chapa app preview">
+        <span class="pill stage-tag">Live product UI</span>
+        <div class="phone">
+          <img src="../Mock/Chat%20Screen%20-%20Main%20Mode.png" alt="Chapa voice chat interface on Android" />
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="section-head">
+        <h2>Built like a complete product</h2>
+        <p>
+          Chapa goes beyond a prompt box: it includes auth, persistence, voice, offline fallback, settings, widget support, and a backend that owns context.
+        </p>
+      </div>
+      <div class="feature-grid">
+        <article class="card">
+          <span class="n">01 / Voice loop</span>
+          <h3>Tap, speak, reply</h3>
+          <p>Audio recording, waveform rendering, automatic silence detection, transcription, and assistant responses in one conversational flow.</p>
+        </article>
+        <article class="card">
+          <span class="n">02 / Context</span>
+          <h3>Backend-owned memory</h3>
+          <p>The backend stores conversation history and sends only the relevant context window to the model, instead of pushing full history from Android every time.</p>
+        </article>
+        <article class="card">
+          <span class="n">03 / Offline</span>
+          <h3>Text fallback on device</h3>
+          <p>When connectivity drops, Chapa disables audio and uses a local LiteRT-LM model for occasional text replies while Room keeps chat history visible.</p>
+        </article>
+        <article class="card">
+          <span class="n">04 / Trust</span>
+          <h3>Encrypted persistence</h3>
+          <p>Conversation titles, message text, and reply previews are encrypted by the backend before they reach Firestore.</p>
+        </article>
+        <article class="card">
+          <span class="n">05 / Interaction</span>
+          <h3>Feels like messaging</h3>
+          <p>Pin chats, rename, delete, reference messages, play voice notes, listen to TTS, and browse history from a pinned drawer footer.</p>
+        </article>
+        <article class="card">
+          <span class="n">06 / Delivery</span>
+          <h3>Ready to review</h3>
+          <p>Clean architecture, Hilt, tests, Room cache, Firebase Auth, FastAPI, Swagger docs, and setup instructions for local and Vercel deployments.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="product">
+      <div class="showcase">
+        <div class="showcase-copy">
+          <span class="eyebrow">Product surface</span>
+          <h2>Quiet UI, useful controls</h2>
+          <p>
+            The app keeps the primary action always close: talk when online, type when offline, and keep moving through chats without losing context.
+          </p>
+        </div>
+        <div class="shots" aria-label="Chapa screenshots">
+          <div class="shot"><img src="../Mock/Chat%20Screen%20-%20Text%20Input%20Mode%20Keyboard%20Out.png" alt="Chapa text input mode" /></div>
+          <div class="shot"><img src="../Mock/Chat%20Screen%20-%20Main%20Mode-1.png" alt="Chapa voice mode" /></div>
+          <div class="shot"><img src="../Mock/Chat%20Screen%20-%20Text%20Input%20Mode.png" alt="Chapa text input with keyboard" /></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="architecture">
+      <div class="section-head">
+        <h2>Split for security and speed</h2>
+        <p>
+          Android focuses on experience. The backend owns secrets, model orchestration, encrypted persistence, and API contracts.
+        </p>
+      </div>
+      <div class="architecture">
+        <div class="stack android">
+          <h3>Android</h3>
+          <div class="layer"><b>Compose UI</b><span>chat, drawer, settings</span></div>
+          <div class="layer"><b>Room cache</b><span>offline history</span></div>
+          <div class="layer"><b>Audio</b><span>record + playback</span></div>
+          <div class="layer"><b>LiteRT-LM</b><span>offline text replies</span></div>
+          <div class="layer"><b>Firebase Auth</b><span>identity token</span></div>
+        </div>
+        <div class="bridge">HTTPS</div>
+        <div class="stack backend">
+          <h3>Backend</h3>
+          <div class="layer"><b>FastAPI</b><span>typed endpoints</span></div>
+          <div class="layer"><b>Context builder</b><span>windowed memory</span></div>
+          <div class="layer"><b>OpenAI</b><span>chat, STT, TTS</span></div>
+          <div class="layer"><b>AES-GCM</b><span>encrypted fields</span></div>
+          <div class="layer"><b>Firestore Admin</b><span>persistence</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="security">
+      <div class="security-band">
+        <div>
+          <span class="eyebrow">Security posture</span>
+          <h2>No provider keys in the APK</h2>
+        </div>
+        <div class="security-list">
+          <div>Firebase ID tokens authenticate every backend request.</div>
+          <div>OpenAI keys and encryption keys live only in the backend environment.</div>
+          <div>Firestore stores encrypted sensitive text when `CHAPA_ENCRYPTION_KEY` is configured.</div>
+          <div>Legacy plaintext documents remain readable for migration compatibility.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="cta-inner">
+        <span class="eyebrow">Complete product pass</span>
+        <h2>Chapa feels finished</h2>
+        <p>
+          A technical project with product polish: Android app, backend, docs, widget, offline strategy, and a privacy-aware storage layer.
+        </p>
+        <div class="hero-actions" style="justify-content:center">
+          <a class="button primary" href="https://github.com/mariorsh/chapa">Open README</a>
+          <a class="button" href="https://chapa-backend.vercel.app/docs">Swagger docs</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>Chapa — Voice-first AI assistant for Android</span>
+      <span>Kotlin · Compose · FastAPI · Room · Firestore</span>
+    </div>
+  </footer>
+</body>
+</html>
