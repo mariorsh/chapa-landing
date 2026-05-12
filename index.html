@@ -336,7 +336,7 @@
     .shots {
       min-height: 520px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(4, 1fr);
       gap: 18px;
       align-items: end;
     }
@@ -352,6 +352,7 @@
     .shot:nth-child(1) { transform: rotate(-3deg) translateY(-8px); }
     .shot:nth-child(2) { transform: rotate(2deg) translateY(26px); }
     .shot:nth-child(3) { transform: rotate(-1deg) translateY(2px); }
+    .shot:nth-child(4) { transform: rotate(2deg) translateY(-12px); }
 
     .architecture {
       display: grid;
@@ -526,7 +527,8 @@
       .shot,
       .shot:nth-child(1),
       .shot:nth-child(2),
-      .shot:nth-child(3) {
+      .shot:nth-child(3),
+      .shot:nth-child(4) {
         transform: none;
         max-width: 360px;
         margin: 0 auto;
@@ -599,9 +601,9 @@
       </div>
 
       <div class="product-stage" aria-label="Chapa app preview">
-        <span class="pill stage-tag">Live product UI</span>
+        <span class="pill stage-tag">Real app capture</span>
         <div class="phone">
-          <img src="./Chat%20Screen%20-%20Main%20Mode.png" alt="Chapa voice chat interface on Android" />
+          <img src="./chat-offline-real.png" alt="Real Chapa chat screen with offline voice message and assistant reply" />
         </div>
       </div>
     </section>
@@ -658,13 +660,14 @@
           <span class="eyebrow">Product surface</span>
           <h2>Quiet UI, useful controls</h2>
           <p>
-            The app keeps the primary action always close: talk online through the backend, talk offline when on-device recognition is available, or type at any time without losing context.
+            Real device captures show the product surfaces working together: login, offline model settings, chat history, widget entry point, and the voice-first chat loop.
           </p>
         </div>
         <div class="shots" aria-label="Chapa screenshots">
-          <div class="shot"><img src="./Chat%20Screen%20-%20Text%20Input%20Mode%20Keyboard%20Out.png" alt="Chapa text input mode" /></div>
-          <div class="shot"><img src="./Chat%20Screen%20-%20Main%20Mode-1.png" alt="Chapa voice mode" /></div>
-          <div class="shot"><img src="./Chat%20Screen%20-%20Text%20Input%20Mode.png" alt="Chapa text input with keyboard" /></div>
+          <div class="shot"><img src="./login-real.png" alt="Real Chapa login screen" /></div>
+          <div class="shot"><img src="./settings-real.png" alt="Real Chapa settings screen with offline model ready" /></div>
+          <div class="shot"><img src="./drawer-real.png" alt="Real Chapa drawer with pinned and recent chats" /></div>
+          <div class="shot"><img src="./widget-real.png" alt="Real Android home screen with Chapa widget" /></div>
         </div>
       </div>
     </section>
