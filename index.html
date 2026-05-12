@@ -6,7 +6,7 @@
   <title>Chapa — Voice-first AI assistant for Android</title>
   <meta
     name="description"
-    content="Chapa is a voice-first AI chat app for Android with backend-managed context, encrypted persistence, offline text replies, and a polished conversational interface."
+    content="Chapa is a voice-first AI chat app for Android with backend-managed context, encrypted persistence, offline voice/text replies, and a polished conversational interface."
   />
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -583,7 +583,7 @@
         <div class="eyebrow"><span class="pill blue">Android AI</span> voice-first companion</div>
         <h1 id="hero-title">Talk to <span class="grad-text">Chapa</span></h1>
         <p class="lead">
-          A polished AI chat product for Android: voice-first, context-aware, encrypted on the backend, and ready for offline text moments.
+          A polished AI chat product for Android: voice-first, context-aware, encrypted on the backend, and ready for offline voice and text moments.
         </p>
         <div class="hero-actions">
           <a class="button primary" href="https://github.com/mariorsh/chapa">Read project</a>
@@ -593,7 +593,7 @@
         <div class="hero-meta" aria-label="Project highlights">
           <span class="pill">Kotlin + Compose</span>
           <span class="pill">FastAPI backend</span>
-          <span class="pill">LiteRT-LM offline</span>
+          <span class="pill">Offline voice + LiteRT-LM</span>
           <span class="pill">AES-GCM persistence</span>
         </div>
       </div>
@@ -631,8 +631,8 @@
         </article>
         <article class="card">
           <span class="n">03 / Offline</span>
-          <h3>Text fallback on device</h3>
-          <p>When connectivity drops, Chapa disables audio and uses a local LiteRT-LM model for occasional text replies while Room keeps chat history visible.</p>
+          <h3>Voice and text on device</h3>
+          <p>When connectivity drops, Chapa can use Android on-device SpeechRecognizer for voice input, keeps the local audio bubble, and answers with LiteRT-LM while Room keeps history visible.</p>
         </article>
         <article class="card">
           <span class="n">04 / Trust</span>
@@ -658,7 +658,7 @@
           <span class="eyebrow">Product surface</span>
           <h2>Quiet UI, useful controls</h2>
           <p>
-            The app keeps the primary action always close: talk when online, type when offline, and keep moving through chats without losing context.
+            The app keeps the primary action always close: talk online through the backend, talk offline when on-device recognition is available, or type at any time without losing context.
           </p>
         </div>
         <div class="shots" aria-label="Chapa screenshots">
@@ -682,7 +682,8 @@
           <div class="layer"><b>Compose UI</b><span>chat, drawer, settings</span></div>
           <div class="layer"><b>Room cache</b><span>offline history</span></div>
           <div class="layer"><b>Audio</b><span>record + playback</span></div>
-          <div class="layer"><b>LiteRT-LM</b><span>offline text replies</span></div>
+          <div class="layer"><b>SpeechRecognizer</b><span>offline voice input</span></div>
+          <div class="layer"><b>LiteRT-LM</b><span>offline replies</span></div>
           <div class="layer"><b>Firebase Auth</b><span>identity token</span></div>
         </div>
         <div class="bridge">HTTPS</div>
